@@ -39,6 +39,8 @@ contract SportsBetting is Ownable, ReentrancyGuard {
 
     constructor() payable {}
 
+    //create match for betting  to start
+
     function createMatch(Match calldata _newMatch) public {
         require(
             !isMatchIdActive[_newMatch.id] &&
@@ -52,6 +54,8 @@ contract SportsBetting is Ownable, ReentrancyGuard {
         emit MatchCreated(_newMatch.id, _newMatch.teamA, _newMatch.teamB);
     }
 
+
+ //create a bet
     function createBet(uint256 matchId, WinnerSelection winnerSelection)
         public
         payable
@@ -64,6 +68,7 @@ contract SportsBetting is Ownable, ReentrancyGuard {
         emit BetCreated(msg.sender, matchId, winnerSelection);
     }
 
+//function to get allactive matches 
     function getAllActiveMatches() public view returns (Match[] memory) {
         Match[] memory matches = new Match[](activeMatches.length);
         for (uint i = 0; i < activeMatches.length; i++) {
@@ -74,6 +79,8 @@ contract SportsBetting is Ownable, ReentrancyGuard {
         return matches;
     }
 
+    //function to end the match
+
     function finishMatch(uint256 _matchId, WinnerSelection _winner) public {
         require(isMatchIdActive[_matchId], "Match not active");
         require(!isMatchIdFullfilled[_matchId], "Match already fullfilled");
@@ -81,6 +88,9 @@ contract SportsBetting is Ownable, ReentrancyGuard {
         isMatchIdActive[_matchId] = false;
         isMatchIdFullfilled[_matchId] = true;
 
+
+       //event
+      
         emit MatchFinished(_matchId, _winner);
 
         // add winning bets to users balances
@@ -100,10 +110,14 @@ contract SportsBetting is Ownable, ReentrancyGuard {
             );
         }
 
+//delete bet
         delete matchIdToPendingBets[_matchId];
         removeActiveMatchArray(_matchId);
         // remove from active matches array
     }
+
+
+    //remove match from active status
 
     function removeActiveMatchArray(uint256 _id) private {
         for (uint i = 0; i < activeMatches.length; i++) {
