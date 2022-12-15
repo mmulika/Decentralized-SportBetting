@@ -6,6 +6,9 @@ contract Welcome{
 
     //functions
     uint x;
+    uint sum;
+    uint y;
+
     event getValue;
     function get( uint x){
         emit getValue()
@@ -17,5 +20,10 @@ contract Welcome{
         x = x
         console.log(x)
 
+    }
+
+    function add(uint )(public view){
+         sum = y + x;
+         return sum;
     }
 }
